@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.constants.Constant;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
@@ -29,9 +30,10 @@ public class CredentialController {
     @PostMapping("/upload")
     public String uploadCredential(Authentication auth, Model model){
         User user = this.userService.getUserByUsername(auth.getName());
-        model.addAttribute("fileList", this.fileService.getListFilesByUserId(user.getUserId()));
-        model.addAttribute("noteList", this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute("credentialList", this.credentialService.getAllCredentials(user.getUserid()));
+        Integer userId = user.getUserId();
+        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(userId));
+//        model.addAttribute(Constant.CREDENTIAL_LIST, this.credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 

@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.constants.Constant;
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
@@ -37,9 +38,10 @@ public class FileController {
                              Authentication auth,
                              Model model) throws IOException {
         User user = this.userService.getUserByUsername(auth.getName());
-        if (this.fileService.isFileNameAvailable(fileUpload.getName(), user.getUserId())) {
+        Integer userId = user.getUserId();
+        if (this.fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), userId)) {
             try {
-                this.fileService.uploadFile(fileUpload, user.getUserId());
+                this.fileService.uploadFile(fileUpload, userId);
                 model.addAttribute("fileUploadSuccess", "File successfully uploaded.");
             } catch (Exception e) {
                 model.addAttribute("fileError", e.toString());
@@ -48,9 +50,9 @@ public class FileController {
             model.addAttribute("fileError", "Can't upload files with duplicate names.");
         }
 
-        model.addAttribute("fileList", this.fileService.getListFilesByUserId(user.getUserId()));
-        model.addAttribute("noteList", this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute("credentialList", this.credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(userId));
+//        model.addAttribute(Constant.CREDENTIAL_LIST, this.credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 
@@ -78,9 +80,9 @@ public class FileController {
             model.addAttribute("fileError", e.toString());
         }
         User user = this.userService.getUserByUsername(auth.getName());
-        model.addAttribute("fileList", this.fileService.getListFilesByUserId(user.getUserId()));
-        model.addAttribute("noteList", this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute("credentialList", this.credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(user.getUserId()));
+        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(user.getUserId()));
+//        model.addAttribute(Constant.CREDENTIAL_LIST, this.credentialService.getListCredentialsByUserId(user.getUserid()));
         return "home";
     }
 }

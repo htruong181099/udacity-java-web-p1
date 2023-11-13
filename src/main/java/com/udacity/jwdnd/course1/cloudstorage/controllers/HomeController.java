@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.constants.Constant;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.slf4j.Logger;
@@ -31,9 +32,11 @@ public class HomeController {
         String username = authentication.getName();
         logger.info("User ", username);
         User user = userService.getUserByUsername(username);
+        Integer userId = user.getUserId();
 
-
-        model.addAttribute("noteList", noteService.getListNotesByUserId(user.getUserId()));
+        model.addAttribute(Constant.FILE_LIST, fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, noteService.getListNotesByUserId(userId));
+        model.addAttribute(Constant.CREDENTIAL_LIST, noteService.getListNotesByUserId(userId));
         return "home";
     }
 }

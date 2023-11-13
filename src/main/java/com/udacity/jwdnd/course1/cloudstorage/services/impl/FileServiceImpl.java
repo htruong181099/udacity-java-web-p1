@@ -19,18 +19,17 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public boolean isFileNameAvailable(String fileName, Integer userId) {
-        return fileMapper.findFileByFilename(fileName, userId) != null;
+        return fileMapper.findFileByFilename(fileName, userId) == null;
     }
 
     @Override
     public void uploadFile(MultipartFile file, Integer userId) throws IOException {
-        File newFile = new File(
-                file.getOriginalFilename(),
-                file.getContentType(),
-                file.getSize(),
-                file.getBytes(),
-                userId
-        );
+        File newFile = new File();
+        newFile.setFileName(file.getOriginalFilename());
+        newFile.setFileSize(file.getSize());
+        newFile.setContentType(file.getContentType());
+        newFile.setFileData(file.getBytes());
+        newFile.setUserId(userId);
 
         try {
             fileMapper.insert(newFile);

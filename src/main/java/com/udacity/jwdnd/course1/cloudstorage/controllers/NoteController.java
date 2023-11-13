@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.constants.Constant;
 import com.udacity.jwdnd.course1.cloudstorage.mappers.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
@@ -22,14 +23,14 @@ import org.springframework.web.bind.annotation.*;
 public class NoteController {
     private final NoteService noteService;
     private final UserService userService;
-//    private final FileService fileService;
-//    private final CredentialService credentialService;
+    private final FileService fileService;
+    private final CredentialService credentialService;
 
     public NoteController(NoteService noteService, UserService userService, FileService fileService, CredentialService credentialService) {
         this.noteService = noteService;
         this.userService = userService;
-//        this.fileService = fileService;
-//        this.credentialService = credentialService;
+        this.fileService = fileService;
+        this.credentialService = credentialService;
     }
 
     public final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -58,9 +59,9 @@ public class NoteController {
                 model.addAttribute("noteError", "Error updating note");
             }
         }
-//        model.addAttribute("files", this.fileService.getAllFiles(user.getUserid()));
-        model.addAttribute("noteList", this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute("credentials", this.credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(userId));
+//        model.addAttribute("credentials", this.credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 
@@ -69,6 +70,7 @@ public class NoteController {
                              Authentication auth,
                              Model model){
         User user = this.userService.getUserByUsername(auth.getName());
+        Integer userId = user.getUserId();
         try {
             noteService.deleteNote(noteId);
             model.addAttribute("noteDeleteSuccess", "Note successfully deleted.");
@@ -76,9 +78,9 @@ public class NoteController {
             logger.error(e.getMessage(),e);
             model.addAttribute("noteError", "Error deleting note");
         }
-//        model.addAttribute("files", this.fileService.getAllFiles(user.getUserid()));
-        model.addAttribute("noteList", this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute("credentials", this.credentialService.getAllCredentials(user.getUserid()));
+        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(userId));
+//        model.addAttribute("credentials", this.credentialService.getListCredentialsByUserId(user.getUserid()));
         return "home";
     }
 }
