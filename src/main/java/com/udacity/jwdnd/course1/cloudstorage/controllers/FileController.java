@@ -32,7 +32,7 @@ public class FileController {
         this.credentialService = credentialService;
     }
 
-    @PostMapping("/file-upload")
+    @PostMapping()
     public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload,
                              Authentication auth,
                              Model model) throws IOException {
