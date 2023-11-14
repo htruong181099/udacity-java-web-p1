@@ -39,7 +39,9 @@ public class FileController {
                              Model model) throws IOException {
         User user = userService.getUserByUsername(auth.getName());
         Integer userId = user.getUserId();
-        if (this.fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), userId)) {
+        if (fileUpload.isEmpty()) {
+            model.addAttribute("fileError", "Invalid file");
+        } else if(this.fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), userId)){
             try {
                 this.fileService.uploadFile(fileUpload, userId);
                 model.addAttribute("fileUploadSuccess", "File successfully uploaded.");
