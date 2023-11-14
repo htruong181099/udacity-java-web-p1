@@ -35,6 +35,7 @@ public class FileServiceImpl implements FileService {
             fileMapper.insert(newFile);
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
