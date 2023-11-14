@@ -24,13 +24,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUsernameExist(String username) {
-        logger.info("isUsernameExist");
         return getUserByUsername(username) == null;
     }
 
     @Override
     public Integer createUser(User user) {
-        logger.info("createUser");
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
@@ -43,7 +41,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        logger.info("getUserByUsername");
         return userMapper.getUser(username);
     }
 }

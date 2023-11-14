@@ -2,7 +2,10 @@ package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.constants.Constant;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
-import com.udacity.jwdnd.course1.cloudstorage.services.*;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -28,15 +31,14 @@ public class HomeController {
     }
 
     @GetMapping()
-    public String homeView(Authentication authentication, Model model){
+    public String homeView(Authentication authentication, Model model) {
         String username = authentication.getName();
-        logger.info("User ", username);
         User user = userService.getUserByUsername(username);
         Integer userId = user.getUserId();
 
         model.addAttribute(Constant.FILE_LIST, fileService.getListFilesByUserId(userId));
         model.addAttribute(Constant.NOTE_LIST, noteService.getListNotesByUserId(userId));
-        model.addAttribute(Constant.CREDENTIAL_LIST, noteService.getListNotesByUserId(userId));
+        model.addAttribute(Constant.CREDENTIAL_LIST, credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 }

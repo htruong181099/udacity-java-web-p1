@@ -37,7 +37,7 @@ public class FileController {
     public String uploadFile(@RequestParam("fileUpload") MultipartFile fileUpload,
                              Authentication auth,
                              Model model) throws IOException {
-        User user = this.userService.getUserByUsername(auth.getName());
+        User user = userService.getUserByUsername(auth.getName());
         Integer userId = user.getUserId();
         if (this.fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), userId)) {
             try {
@@ -50,9 +50,9 @@ public class FileController {
             model.addAttribute("fileError", "Can't upload files with duplicate names.");
         }
 
-        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(userId));
-        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(userId));
-//        model.addAttribute(Constant.CREDENTIAL_LIST, this.credentialService.getListCredentialsByUserId(userId));
+        model.addAttribute(Constant.FILE_LIST, fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, noteService.getListNotesByUserId(userId));
+        model.addAttribute(Constant.CREDENTIAL_LIST, credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 
@@ -73,16 +73,18 @@ public class FileController {
     public String deleteFile(@PathVariable("fileId") Integer fileId,
                              Authentication auth,
                              Model model) throws IOException {
+        User user = userService.getUserByUsername(auth.getName());
+        Integer userId = user.getUserId();
         try {
             fileService.deleteFile(fileId);
             model.addAttribute("fileDeleteSuccess", "File successfully deleted.");
         } catch (Exception e) {
             model.addAttribute("fileError", e.toString());
         }
-        User user = this.userService.getUserByUsername(auth.getName());
-        model.addAttribute(Constant.FILE_LIST, this.fileService.getListFilesByUserId(user.getUserId()));
-        model.addAttribute(Constant.NOTE_LIST, this.noteService.getListNotesByUserId(user.getUserId()));
-//        model.addAttribute(Constant.CREDENTIAL_LIST, this.credentialService.getListCredentialsByUserId(user.getUserid()));
+
+        model.addAttribute(Constant.FILE_LIST, fileService.getListFilesByUserId(userId));
+        model.addAttribute(Constant.NOTE_LIST, noteService.getListNotesByUserId(userId));
+        model.addAttribute(Constant.CREDENTIAL_LIST, credentialService.getListCredentialsByUserId(userId));
         return "home";
     }
 }

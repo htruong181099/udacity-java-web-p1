@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 @Configuration
@@ -25,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        String[] whiteList = new String[]{"/signup", "/css/**", "/js/**"};
+        String[] whiteList = new String[]{"/login", "/signup", "/css/**", "/js/**"};
         http.cors().and()
                 .csrf().disable()
                 .authorizeRequests()
@@ -38,8 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
                 .permitAll()
-                .defaultSuccessUrl("/home", true);
+                .defaultSuccessUrl("/home", true)
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login?logout")
+                .permitAll();
     }
 
 }

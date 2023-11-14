@@ -40,7 +40,7 @@ public class NoteController {
                           Model model,
                           Authentication auth
     ){
-        User user = this.userService.getUserByUsername(auth.getName());
+        User user = userService.getUserByUsername(auth.getName());
         Integer userId = user.getUserId();
         if (note.getNoteId() == null){
             try {
@@ -69,7 +69,7 @@ public class NoteController {
     public String deleteNote(@PathVariable("noteId") Integer noteId,
                              Authentication auth,
                              Model model){
-        User user = this.userService.getUserByUsername(auth.getName());
+        User user = userService.getUserByUsername(auth.getName());
         Integer userId = user.getUserId();
         try {
             noteService.deleteNote(noteId);
